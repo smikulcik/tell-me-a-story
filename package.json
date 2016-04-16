@@ -4,12 +4,13 @@
   "description": "take words and make sentences",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Siomn",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.13.4",
     "natural": "^0.4.0",
     "prompt": "^1.0.0",
     "sprintf": "^0.1.5",
