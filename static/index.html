@@ -4,44 +4,80 @@
 <body>
 <script src="phaser.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-// Safari caches cross-origin resources in a ridiculous way.
-// We'll work around this annoyance by monkeypatching 
-// Phaser to ensure that we never ask for cached data.
-function bypassSafariCORSLameness() {
-  var LoaderProto = Phaser.Loader.prototype;
-  var ua = navigator.userAgent;
-  var isSafari = /safari/i.test(ua) && !/chrome/i.test(ua);
-  if (!isSafari || LoaderProto.originalXhrLoad) return;
 
-  console.log("Monkeypatching Phaser.Loader to bust cache because " +
-              "https://github.com/photonstorm/phaser/issues/1355.");
-  LoaderProto.originalXhrLoad = LoaderProto.xhrLoad;
-  LoaderProto.xhrLoad = function(index, url, type, onload, onerror) {
-    url = url + '?cacheBust=' + Date.now();
-    return this.originalXhrLoad(index, url, type, onload, onerror);
-  };
-}
-bypassSafariCORSLameness();
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example');
 
-function preload() {
+var Menu = function(){};
 
-    //  You can fill the preloader with as many assets as your game requires
+Menu.prototype = {
+	preload : function(){
+		this.load.image('sword','assets/menu.png');
+		this.load.image('menu_laser','assets/menu_laser.png');
+		this.load.image('menu_kitty','assets/menu_kitty.png');
+		this.load.image('menu_sim','assets/menu_sim.png');
+		this.load.image('button','assets/start.png');
 
-    //  Here we are loading an image. The first parameter is the unique
-    //  string by which we'll identify the image later in our code.
-
-    //  The second parameter is the URL of the image (relative)
     game.load.image('cat', 'assets/cats.jpg');  //'http://lorempixel.com/200/200/cats/');
+    game.load.image('Sword', 'assets/Sword.png');
+	},
+
+	create : function(){
+		this.menu = this.add.sprite(0,0,'Sword');
+		this.menu_laser = this.add.sprite(0,0,'menu_laser');
+		this.menu_kitty = this.add.sprite(0,0,'menu_kitty');
+		this.menu_sim = this.add.sprite(0,0,'menu_sim');
+
+
+		this.button = game.add.button(550, 500, 'button', this.onClick, this, 2, 1, 0);
+		this.button.onInputOver.add(this.onOver, this);
+    this.button.onInputOut.add(this.onOut, this);
+		this.startTime = Date.now();
+	},
+
+	update : function(){
+		var td = (Date.now() - this.startTime)/1000.0;
+		this.menu_laser.x = 10*Math.sin(3*td);
+		this.menu_laser.y = 8*Math.sin(5*td);
+		this.menu_kitty.x = 10*Math.sin(3*td+.5);
+		this.menu_kitty.y = 8*Math.sin(7*td+.2);
+		this.menu_sim.x = 10*Math.sin(9*td+.9);
+		this.menu_sim.y = 8*Math.sin(11*td+.11);
+	},
+
+	onClick : function(){
+		game.state.start('Main');
+	},
+
+	onOver : function(){
+		this.button.scale.x = 1.25;
+		this.button.scale.y = 1.25;
+		this.button.position.x = 650 - 100*1.25;
+		this.button.position.y = 525 - 25*1.25;
+	},
+
+	onOut : function(){
+		this.button.scale.x = 1;
+		this.button.scale.y = 1;
+		this.button.position.x = 650 - 100;
+		this.button.position.y = 525 - 25;
+	}
 
 }
+
+// now we start the game
+game.state.add('Menu', Menu);
+//game.state.add('Main', MainGameState);
+game.state.start('Menu');
+
 
 function create() {
 
     //  This creates a simple sprite that is using our loaded image and
     //  displays it on-screen
+    game.add.sprite(10, 20, 'Sword');
     game.add.sprite(0, 0, 'cat');
-	
+
+
 	requestNumber = JSONRequest.post(
 		"https://example.com/api/",
 		{
