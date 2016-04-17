@@ -66,7 +66,20 @@ var verb_types = ['VB','VBD', 'VBN','VBP','VBZ']; // base, past, past part., pre
 
 var s_patterns = [
 	"A %(n)s %(adv)s %(v)s the %(adj)s %(n2)s",
-	"However, when the %(n)s %(v)s the %(n2)s, a %(n3)s went to the %(n4)s %(adv)s"
+	"However, when the %(n)s %(v)s the %(n2)s, a %(n3)s went to the %(n4)s %(adv)s",
+	"As %(n)s %(v)s the %(adj)s %(n)s from its %(n2)s, %(past-v)s at its %(adv)s power %(v2)s from the %(n3)s into you own %(n4)s.",
+	"The %(n)s would never forget what happened on that night.",
+	"Under the command of Admiral %(n)s, you and %(adj)s %(n)s disembark to defend the galaxy from the %(adj2)s %(n2)s and their plan for %(v)s.",
+	"Then from nowhere came the %(n)s of %(n2)s %(adj)s a %(v)s be made in his honor if the %(n3)s wished to %(v2)s.",
+	"%(adv)s now! Make like a %(adj)s %(adj2)s %(n)s and %(v)s out of %(n)s.",
+	"AWW FREAKING %(adv)s %(adj)s %(n)s. Why the %(adv2)s %(v)s does this happen to %(n)s! Forget my %(n)s.",
+	"%(v)s it. %(v)s it. %(v)s it. %(v)s IT! WHY AREN’T YOU %(v)sING IT!",
+	"You had a dream where %(n)s was %(v)s %(n2)s only to have a %(adj)s %(n3)s come and %(v2)s all over. Then for some reason you were %(v3)s a %(n4)s and %(n)s turned into a(n)s %(n5)s which was perfect since you needed something to %(v4)s %(n3)s because he was trying to %(v)s as well.",
+	"%(n)! Use your %(adv)s %(v)s attack!...It’s %(adv)s effective!",
+	"I am your %(n)s’s %(n2)s’s %(adj)s %(v)s %(n3)s’s %(n4)s…I forget where I was %(v2)sing with this…",
+	"Hello, welcome to the world of %(n)s. My name is Prof. %(n2)s. People affectional %(v)s me as the %(n)s %(n3)s.",
+	"So your %(n)s is, as described by you, a(n)s %(adj)s %(n)s…neat…",
+	"Once apon a time there was a(n)s %(adj)s %(n)s. He was so %(adj)s that everybody %(v)s. The End."
 ];
 var tagger = new Tagger(lexicon_file, rules_file, default_category, function(error) {
 });//tagger
@@ -152,12 +165,22 @@ var generateSentence = function(in_sent){
 					"n2":nouns[Math.floor(nouns.length*Math.random())],
 					"n3":nouns[Math.floor(nouns.length*Math.random())],
 					"n4":nouns[Math.floor(nouns.length*Math.random())],
+					"n5":nouns[Math.floor(nouns.length*Math.random())],
 					"adj":adjs[Math.floor(adjs.length*Math.random())],
 					"adj2":adjs[Math.floor(adjs.length*Math.random())],
+					"adj3":adjs[Math.floor(adjs.length*Math.random())],
+					"adj4":adjs[Math.floor(adjs.length*Math.random())],
+					"adj5":adjs[Math.floor(adjs.length*Math.random())],
 					"adv":advs[Math.floor(advs.length*Math.random())],
 					"adv2":advs[Math.floor(advs.length*Math.random())],
+					"adv3":advs[Math.floor(advs.length*Math.random())],
+					"adv4":advs[Math.floor(advs.length*Math.random())],
+					"adv5":advs[Math.floor(advs.length*Math.random())],
 					"v": verbs[Math.floor(verbs.length*Math.random())],
 					"v2": verbs[Math.floor(verbs.length*Math.random())]
+					"v3": verbs[Math.floor(verbs.length*Math.random())]
+					"v4": verbs[Math.floor(verbs.length*Math.random())]
+					"v5": verbs[Math.floor(verbs.length*Math.random())]
 				}));
 		});
 
