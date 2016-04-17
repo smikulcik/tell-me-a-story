@@ -16,8 +16,8 @@
 <div id="tell_me_a_story"></div>
 <input id="input" style="width:750px;margin:0px;"
 	onkeydown="onInputSubmitKeypress(event)" />
-<button 
-	style="width:50px;margin:0px;padding:0px;" 
+<button
+	style="width:50px;margin:0px;padding:0px;"
 	onclick=onInputSubmit()>
 	Write
 </button>
@@ -32,15 +32,15 @@ var Menu = function(){};
 Menu.prototype = {
 	preload : function(){
 
-    game.load.image('cat', 'assets/cats.jpg');  //'http://lorempixel.com/200/200/cats/');
-    game.load.image('Sword', 'assets/Sword.png');
+    game.load.image('start', 'assets/open.png');  //'http://lorempixel.com/200/200/cats/');
+    game.load.image('book', 'assets/tmeas_menu.png');
 	},
 
 	create : function(){
-		this.menu = this.add.sprite(0,0,'Sword');
+		this.menu = this.add.sprite(0,0,'book');
 
 
-		this.button = game.add.button(550, 500, 'cat', this.onClick, this, 2, 1, 0);
+		this.button = game.add.button(500, 0, 'start', this.onClick, this, 2, 1, 0);
 		this.button.onInputOver.add(this.onOver, this);
 		this.button.onInputOut.add(this.onOut, this);
 		this.startTime = Date.now();
@@ -63,9 +63,9 @@ Menu.prototype = {
 
 var Game = function(){};
 
-var style = { 
-	font: "32px OldEnglish, Arial", 
-	align: "left", 
+var style = {
+	font: "32px OldEnglish, Arial",
+	align: "left",
 	wordWrap: true,
 	wordWrapWidth: 700
 };
@@ -73,15 +73,15 @@ var style = {
 Game.prototype = {
 	preload : function(){
 
-    game.load.image('cat', 'assets/cats.jpg');  //'http://lorempixel.com/200/200/cats/');
-    game.load.image('Sword', 'assets/Sword.png');
+    //game.load.image('start', 'assets/open.jpg');
+    //game.load.image('book', 'assets/tmeas_menu.png');
 	},
 
 	create : function(){
 		//this.menu = this.add.sprite(0,0,'Sword');
 
 		game.stage.backgroundColor = 0xfffbdf;
-		
+
 		this.text = game.add.text(50, 50, story, style);
 
 
@@ -105,7 +105,7 @@ Game.prototype = {
 game.state.add('Menu', Menu);
 game.state.add('Game', Game);
 
-game.state.start('Game');
+game.state.start('Menu');
 
 var addToStory = function(line){
 	story += line + "\n";
