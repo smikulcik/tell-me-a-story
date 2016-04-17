@@ -73,41 +73,50 @@ var s_patterns = [
 	"Then from nowhere came the %(n)s of %(n2)s %(adj)s a %(v)s be made in his honor if the %(n3)s wished to %(v2)s.",
 	"%(adv)s now! Make like a %(adj)s %(adj2)s %(n)s and %(v)s out of %(n)s.",
 	"AWW FREAKING %(adv)s %(adj)s %(n)s. Why the %(adv2)s %(v)s does this happen to %(n)s! Forget my %(n)s.",
-	"%(v)s it. %(v)s it. %(v)s it. %(v)s IT! WHY AREN’T YOU %(v)sING IT!",
-	"You had a dream where %(n)s was %(v)s %(n2)s only to have a %(adj)s %(n3)s come and %(v2)s all over. Then for some reason you were %(v3)s a %(n4)s and %(n)s turned into a(n)s %(n5)s which was perfect since you needed something to %(v4)s %(n3)s because he was trying to %(v)s as well.",
-	"%(n)! Use your %(adv)s %(v)s attack!...It’s %(adv)s effective!",
-	"I am your %(n)s’s %(n2)s’s %(adj)s %(v)s %(n3)s’s %(n4)s…I forget where I was %(v2)sing with this…",
+	"%(v)s it. %(v)s it. %(v)s it. %(v)s IT! WHY AREN'T YOU %(v)sING IT!",
+	"You had a dream where %(n)s was %(v)s %(n2)s only to have a %(adj)s %(n3)s come and %(v2)s all over. Then for some reason you were %(v3)s a %(n4)s and %(n)s turned into a %(adj)s %(n5)s which was perfect since you needed something to %(v4)s %(n3)s because he was trying to %(v)s as well.",
+	"%(n)! Use your %(adv)s %(v)s attack!...It's %(adv)s effective!",
+	"I am your %(n)s's %(n2)s's %(adj)s %(v)s %(n3)s's %(n4)s...I forget where I was %(v2)sing with this...",
 	"Hello, welcome to the world of %(n)s. My name is Prof. %(n2)s. People affectional %(v)s me as the %(n)s %(n3)s.",
-	"So your %(n)s is, as described by you, a(n)s %(adj)s %(n)s…neat…",
-	"Once apon a time there was a(n)s %(adj)s %(n)s. He was so %(adj)s that everybody %(v)s. The End."
+	"So your %(n)s is, as described by you, a %(n2)s %(adj)s %(n)s ...neat...",
+	"Once apon a time there was a %(n)s %(adj)s %(n2)s. He was so %(adj)s that everybody %(v)s. The End.",
+	"Yo %(n)s so %(adj)s, that %(n2)s had to %(v)s their own %(n3)s out.",
+	"You have activated my %(adj)s %(n)s card. Due to this you can no longer %(v)s any of your %(n2)s on your side of the %(n3)s.",
+	"No, it can't %(v)s this way!",
+	"I see what you %(v)s there. Thinking that %(v2)s %(n)s would make me not %(adj)s.",
+	"Thank you for you purchase of 1,000 %(n)ss. We will not %(v)s why you need 1000 %(n)ss for just because we have your %(n2)s now so we don't care.",
 ];
 var tagger = new Tagger(lexicon_file, rules_file, default_category, function(error) {
+generateSentence("")//"The spider walked into the barnyard where the cows live.")
+.then(function(result){console.log(result);});
+
 });//tagger
 
 var generateSentence = function(in_sent){
 	return new Promise(function(resolve, reject){
 		
-		var nouns = ["person", "man", "woman"];
-		var adjs = ["awesome", "terrible", "cool"];
-		var advs = ["slowly", "quickly", "superbly"];
-		var verbs = ["went", "did", "slay"];
+		var nouns = [];//["person", "man", "woman"];
+		var adjs = [];//["awesome", "terrible", "cool"];
+		var advs = [];//["slowly", "quickly", "superbly"];
+		var verbs = [];//["went", "did", "slay"];
 
 		var addWords = function(list){
+			
 			var tagged = tagger.tag(list);
-				//console.log(tagged);
-				
-				for(var i=0;i<tagged.length;i++){
-					var word = tagged[i][0];
-					var type = tagged[1]
-					if(noun_types.indexOf(tagged[i][1]) > -1)
-						nouns.push(tagged[i][0]);
-					if(adj_types.indexOf(tagged[i][1]) > -1)
-						adjs.push(tagged[i][0]);
-					if(adv_types.indexOf(tagged[i][1]) > -1)
-						advs.push(tagged[i][0]);
-					if(verb_types.indexOf(tagged[i][1]) > -1)
-						verbs.push(tagged[i][0]);
-				}
+			//console.log(tagged);
+			
+			for(var i=0;i<tagged.length;i++){
+				var word = tagged[i][0];
+				var type = tagged[1]
+				if(noun_types.indexOf(tagged[i][1]) > -1)
+					nouns.push(tagged[i][0]);
+				if(adj_types.indexOf(tagged[i][1]) > -1)
+					adjs.push(tagged[i][0]);
+				if(adv_types.indexOf(tagged[i][1]) > -1)
+					advs.push(tagged[i][0]);
+				if(verb_types.indexOf(tagged[i][1]) > -1)
+					verbs.push(tagged[i][0]);
+			}
 		};
 		var getSynonyms = function(){
 			var promises = [];
@@ -151,14 +160,46 @@ var generateSentence = function(in_sent){
 					});
 				}));
 			}
-			
-			return Promise.all(promises);
+			return Promise.all(promises).then(function(){
+				var p_list = [];
+				if(nouns.length < 5){
+					p_list.push(new Promise(function(res,rej){
+						wordpos.randNoun({count:5}, function(result){
+							nouns = nouns.concat(result);
+							res();
+						}, res);
+					}));
+				}
+				if(adjs.length < 5){
+					p_list.push(new Promise(function(res,rej){
+						wordpos.randNoun({count:5}, function(result){
+							adjs = adjs.concat(result);
+							res();
+						}, res);
+					}));
+				}
+				if(advs.length < 5){
+					p_list.push(new Promise(function(res,rej){
+						wordpos.randNoun({count:5}, function(result){
+							advs = advs.concat(result);
+							res();
+						}, res);
+					}));
+				}
+				if(verbs.length < 5){
+					p_list.push(new Promise(function(res,rej){
+						wordpos.randNoun({count:5}, function(result){
+							verbs = verbs.concat(result);
+							res();
+						}, res);
+					}));
+				}
+				return Promise.all(p_list);
+			});
 		};
 		addWords(in_sent.split(" "));
-		
 		getSynonyms().then(function(){
-			
-			resolve(sprintf(
+			var sent = sprintf(
 				s_patterns[Math.floor(s_patterns.length*Math.random())], 
 				{
 					"n":nouns[Math.floor(nouns.length*Math.random())],
@@ -177,17 +218,17 @@ var generateSentence = function(in_sent){
 					"adv4":advs[Math.floor(advs.length*Math.random())],
 					"adv5":advs[Math.floor(advs.length*Math.random())],
 					"v": verbs[Math.floor(verbs.length*Math.random())],
-					"v2": verbs[Math.floor(verbs.length*Math.random())]
-					"v3": verbs[Math.floor(verbs.length*Math.random())]
-					"v4": verbs[Math.floor(verbs.length*Math.random())]
+					"v2": verbs[Math.floor(verbs.length*Math.random())],
+					"v3": verbs[Math.floor(verbs.length*Math.random())],
+					"v4": verbs[Math.floor(verbs.length*Math.random())],
 					"v5": verbs[Math.floor(verbs.length*Math.random())]
-				}));
+				});
+			sent = sent.replace(/_/g, " ");
+			resolve(sent);
 		});
 
 	});//promise
 };//generateSentence
-
-//generateSentence("The spider walked into the barnyard where the cows live.").then(function(result){console.log(result);});
 
 module.exports = {
 	"generateSentence": generateSentence
