@@ -3,7 +3,6 @@ var WordPOS = require('wordpos'),
 var natural = require("natural");
 var wordnet = new natural.WordNet();
 	var sprintf = require('sprintf');
-var prompt = require('prompt');
 var Tagger = require("./node_modules/natural/lib/natural").BrillPOSTagger;
 
 

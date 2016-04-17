@@ -6,33 +6,64 @@
 		font-family: 'OldEnglish';
 		src: url('old_english.ttf') format('truetype');
 	}
-	body{
+	body {
+		font-family: Arial;
+		font-size: 16pt;
+	}
+	.title{
 		font-family: 'OldEnglish';
+	}
+	#centered {
+		width:850px;
+		margin:auto;
 	}
 </style>
 </head>
 <body>
-<h1>Tell me a story...</h1>
-<button id='restart' onclick=restart()>Restart</button>
-<div id="tell_me_a_story"></div>
-<input id="input" style="width:750px;margin:0px;"
-	onkeydown="onInputSubmitKeypress(event)" />
-<button
-	style="width:50px;margin:0px;padding:0px;"
-	onclick=onInputSubmit()>
-	Write
-</button>
-<p>
-	<h3>How to play!</h3>
-	<ul>
-		<li>Enter a sentence or two to start the story</li>
-		<li>We will write a story based on what you say</li>
-		<li>You have control of whatever path the story takes</li>
-		<li>Use your words to shapeshift the progress of the story</li>
-		<li>Hint: Be <i>extra</i> descriptive to make a more interesting story</li>
-		<li>But! if you don't tell us enough information, we will use <b>RANDOM</b> words!</li>
-	</ul>
-</p>
+<div id=centered>
+	<h1 class=title>Tell me a story...</h1>
+	<h4><i>The somewhat intelligent interactive storytelling bot</i></h4>
+	<h3>LD 35 Jam entry by David Cannon II, Joel Babbitt, and Simon Mikulcik</h3>
+	<button id='restart' onclick=restart()>Restart</button>
+	<div id="tell_me_a_story"></div>
+	<div id="controls" style='visibility:hidden;'>
+		<span style="width:100px;">Enter Words:</span>
+		<input id="input" style="width:600px;margin:0px;"
+			onkeydown="onInputSubmitKeypress(event)" />
+		<button
+			id='writeBtn'
+			style="width:50px;margin:0px;padding:0px;"
+			onclick=onInputSubmit()>
+			Write
+		</button>
+	</div>
+	<p>
+		<h3>How to play!</h3>
+		<ul>
+			<li>Enter a sentence or two to start the story</li>
+			<li>The bot will write another line based on what you say</li>
+			<li>Then, you write another line</li>
+			<li>You have control to tell the bot which path the story takes</li>
+			<li>Use your words to <b><i>shapeshift</i></b> the progress of the story</li>
+			<li>Hint: Be <i>extra</i> descriptive to make a more interesting story</li>
+			<li>But! if you don't tell us enough information, we will use <b>RANDOM</b> words!</li>
+		</ul>
+		<h3>How it works</h3>
+		<ul>
+			<li>We take the words you type in and find a bunch of words similar
+			to them</li>
+			<li>Then we put the similar words together to create fun sentences</li>
+		</ul>
+		<h3>Notable Technology Used</h3>
+		<ul>
+			<li><a href="https://nodejs.org/en/">Node</a> for framework</li>
+			<li><a href="https://github.com/NaturalNode/natural">Natural</a> for language processing for node</li>
+			<li><a href="https://github.com/moos/wordpos">wordpos</a> part-of-speech utilities</li>
+	</p>
+</div>
+<footer style="text-align:center">
+ <small>2016, Chicken Finger Coding</small>
+</footer>
 <script src="phaser.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'tell_me_a_story');
@@ -63,6 +94,7 @@ Menu.prototype = {
 
 	onClick : function(){
 		game.state.start('Game');
+		document.getElementById("controls").style.visibility = "visible";
 	},
 
 	onOver : function(){
@@ -101,6 +133,11 @@ Game.prototype = {
 
 	update : function(){
 		this.text.setText(story);
+		var substory = story;
+		while(this.text.height > 600){
+			substory = substory.slice(substory.indexOf('\n')+1);
+			this.text.setText(substory);
+		}
 	},
 
 	onClick : function(){
@@ -121,7 +158,6 @@ game.state.start('Menu');
 
 var addToStory = function(line){
 	story += line + "\n";
-	console.log(line);
 };
 
 var onInputSubmit = function(){
