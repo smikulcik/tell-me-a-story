@@ -17,8 +17,8 @@ LD 35 Jam entry by David Cannon II, Joel Babbitt, and Simon Mikulcik
 
 ##How it works
 
-We take the words you type in and find a bunch of words similar to them
-Then we put the similar words together to create fun sentences
+* We take the words you type in and find a bunch of words similar to them
+* Then we put the similar words together to create fun sentences
 
 ##Notable Technology Used
 
