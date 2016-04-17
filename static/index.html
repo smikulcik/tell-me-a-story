@@ -1,21 +1,36 @@
 
 <html>
-<head></head>
+<head>
+<style>
+	@font-face{
+		font-family: 'OldEnglish';
+		src: url('old_english.ttf') format('truetype');
+	}
+	body{
+		font-family: 'OldEnglish';
+	}
+</style>
+</head>
 <body>
+<h1>Tell me a story...</h1>
+<div id="tell_me_a_story"></div>
+<input id="input" style="width:750px;margin:0px;"
+	onkeydown="onInputSubmitKeypress(event)" />
+<button 
+	style="width:50px;margin:0px;padding:0px;" 
+	onclick=onInputSubmit()>
+	Write
+</button>
 <script src="phaser.min.js" type="text/javascript"></script>
 <script type="text/javascript">
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'tell_me_a_story');
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example');
+var story = "";
 
 var Menu = function(){};
 
 Menu.prototype = {
 	preload : function(){
-		this.load.image('sword','assets/menu.png');
-		this.load.image('menu_laser','assets/menu_laser.png');
-		this.load.image('menu_kitty','assets/menu_kitty.png');
-		this.load.image('menu_sim','assets/menu_sim.png');
-		this.load.image('button','assets/start.png');
 
     game.load.image('cat', 'assets/cats.jpg');  //'http://lorempixel.com/200/200/cats/');
     game.load.image('Sword', 'assets/Sword.png');
@@ -23,25 +38,57 @@ Menu.prototype = {
 
 	create : function(){
 		this.menu = this.add.sprite(0,0,'Sword');
-		this.menu_laser = this.add.sprite(0,0,'menu_laser');
-		this.menu_kitty = this.add.sprite(0,0,'menu_kitty');
-		this.menu_sim = this.add.sprite(0,0,'menu_sim');
 
 
-		this.button = game.add.button(550, 500, 'button', this.onClick, this, 2, 1, 0);
+		this.button = game.add.button(550, 500, 'cat', this.onClick, this, 2, 1, 0);
 		this.button.onInputOver.add(this.onOver, this);
-    this.button.onInputOut.add(this.onOut, this);
+		this.button.onInputOut.add(this.onOut, this);
 		this.startTime = Date.now();
 	},
 
 	update : function(){
-		var td = (Date.now() - this.startTime)/1000.0;
-		this.menu_laser.x = 10*Math.sin(3*td);
-		this.menu_laser.y = 8*Math.sin(5*td);
-		this.menu_kitty.x = 10*Math.sin(3*td+.5);
-		this.menu_kitty.y = 8*Math.sin(7*td+.2);
-		this.menu_sim.x = 10*Math.sin(9*td+.9);
-		this.menu_sim.y = 8*Math.sin(11*td+.11);
+	},
+
+	onClick : function(){
+		game.state.start('Game');
+	},
+
+	onOver : function(){
+	},
+
+	onOut : function(){
+	}
+
+}
+
+var Game = function(){};
+
+var style = { 
+	font: "32px OldEnglish, Arial", 
+	align: "left", 
+	wordWrap: true,
+	wordWrapWidth: 700
+};
+
+Game.prototype = {
+	preload : function(){
+
+    game.load.image('cat', 'assets/cats.jpg');  //'http://lorempixel.com/200/200/cats/');
+    game.load.image('Sword', 'assets/Sword.png');
+	},
+
+	create : function(){
+		//this.menu = this.add.sprite(0,0,'Sword');
+
+		game.stage.backgroundColor = 0xfffbdf;
+		
+		this.text = game.add.text(50, 50, story, style);
+
+
+	},
+
+	update : function(){
+		this.text.setText(story);
 	},
 
 	onClick : function(){
@@ -49,51 +96,53 @@ Menu.prototype = {
 	},
 
 	onOver : function(){
-		this.button.scale.x = 1.25;
-		this.button.scale.y = 1.25;
-		this.button.position.x = 650 - 100*1.25;
-		this.button.position.y = 525 - 25*1.25;
 	},
 
 	onOut : function(){
-		this.button.scale.x = 1;
-		this.button.scale.y = 1;
-		this.button.position.x = 650 - 100;
-		this.button.position.y = 525 - 25;
 	}
 
 }
-
-// now we start the game
 game.state.add('Menu', Menu);
-//game.state.add('Main', MainGameState);
-game.state.start('Menu');
+game.state.add('Game', Game);
 
+game.state.start('Game');
 
-function create() {
+var addToStory = function(line){
+	story += line + "\n";
+	console.log(line);
+};
 
-    //  This creates a simple sprite that is using our loaded image and
-    //  displays it on-screen
-    game.add.sprite(10, 20, 'Sword');
-    game.add.sprite(0, 0, 'cat');
+var onInputSubmit = function(){
+	var input = document.getElementById("input").value;
+	document.getElementById("input").value = "";
+	addToStory(input);
+	getCPUText(input, function(cpuInput){
+		addToStory(cpuInput);
+	});
+};
 
+var onInputSubmitKeypress = function(event){
+	if(event.keyCode == 13)onInputSubmit();
+	console.log(event);
+};
 
-	requestNumber = JSONRequest.post(
-		"https://example.com/api/",
-		{
-			userinput: "23462",
-		},
-		function (requestNumber, value, exception) {
-			if (value) {
-				console.log(value);
-			} else {
-				console.err(exception);
-			}
-		}
-	);
+function getCPUText(inputString, callback) {
+
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+           if(xmlhttp.status == 200){
+               callback(xmlhttp.responseText);
+           }
+        }
+    }
+
+    xmlhttp.open("GET", "/words/?s="+encodeURI(inputString), true);
+    xmlhttp.send();
 
 }
 </script>
+
 <link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
 </body>
 </html>
