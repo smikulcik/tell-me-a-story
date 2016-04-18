@@ -18,4 +18,4 @@ app.get('/words/', function(req, res){
 app.use(express.static("static"));
 
 
-server.listen(8000);
+server.listen(8002);
